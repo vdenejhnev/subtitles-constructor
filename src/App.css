@@ -1,10 +1,169 @@
 .App {
+  font-family: system-ui;
   text-align: center;
+  padding: 16px 24px;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.subtitles-editor {
+  display: flex;
+  flex-direction: row;
+  padding-left: 80px;
+}
+
+.waveform-editor {
+  display: flex;
+  align-items: flex-start;
+  height: 600px;
+  width: 820px;
+  overflow-y: scroll;
+}
+
+.waveform-editor .subtitles-container {
+  width: 682px;
+  margin-top: 4px;
+}
+
+.waveform-editor .subtitles-container .subtitles-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px 0 14px;
+  position: relative;
+  border-top: 1px solid #858585;
+  cursor: pointer;
+}
+
+.subtitles-item .subtitles-drag {
+  position: absolute;
+  width: 22px;
+  background-image: url(/public/img/icon-drag.png);
+  background-size: cover;
+  height: 22px;
+  margin: 2px;
+  z-index: -1;
+  user-select: none;
+}
+
+.subtitles-item .subtitles-action {
+  margin-left: 32px;
+}
+
+.subtitles-item .subtitles-btn-play,
+.subtitles-item .subtitles-btn-remove {
+  border: none;
+  background: none;
+}
+
+.subtitles-item .subtitles-btn-play img,
+.subtitles-item .subtitles-btn-remove img {
+  position: relative;
+  height: 22px;
+  z-index: -1;
+  user-select: none;
+}
+
+.subtitles-item .subtitles-text {
+  position: absolute;
+  margin-left: 106px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 24px;
+  width: 490px;
+  max-width: 490px;
+  padding: 0 6px;
+  max-height: 24px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.subtitles-item .subtitles-text:focus {
+  height: 96px;
+  max-height: 96px;
+  height: 96px;
+  max-height: 96px;
+  background: #fff;
+  z-index: 1;
+  border: solid 1px;
+  border-radius: 2px;
+}
+
+.subtitles-item .subtitles-time {
+  color: #858585;
+  font-size: 11px;
+  width: 48px;
+  user-select: none;
+}
+
+.waveform-editor .subtitles-container .subtitles-container-action {
+  display: flex;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 620px;
+  width: 682px;
+}
+
+.waveform-editor .subtitles-container .subtitles-container-action button {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-family: system-ui;
+  font-weight: 500;
+  border: none;
+  border-radius: 23px;
+  box-shadow: 4px 4px 12px 1px #a8a8a8;
+}
+
+.waveform-editor .subtitles-container .subtitles-container-action .add-subtitle-btn {
+  background-color: #19c60b;
+  color: #fff;
+}
+
+.waveform-editor .subtitles-container .subtitles-container-action .download-subtitle-btn {
+  background: #008eff;
+  color: #fff;
+}
+
+.waveform-editor canvas {
+  display: block;
+  position: relative;
+  width: 120px;
+}
+
+.subtitles-editor .editor-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitles-editor .editor-options .file-upload {
+  background: #fff;
+  border: 1px solid #b3b3b3;
+  padding: 10px 6px;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.subtitles-editor .editor-options .editor-zoom {
+  display: block;
+  padding: 10px 6px;
+}
+
+.subtitles-editor .editor-options .editor-zoom label {
+  display: flex;
+  justify-content: space-between;
+  width: 76%;
+}
+
+.subtitles-editor .editor-options .editor-zoom label select {
+  width: 60%;
+}
+
+.subtitles-editor #editor-zoom,
+.subtitles-editor #editor-controls {
+  display: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
