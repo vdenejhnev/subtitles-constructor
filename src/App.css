@@ -30,11 +30,18 @@
 
 .waveform-editor .subtitles-container .subtitles-item {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   padding: 0 8px 0 14px;
   position: relative;
   border-top: 1px solid #858585;
+  border-bottom: 1px solid #858585;
   cursor: pointer;
+}
+
+.waveform-editor .subtitles-container .subtitles-item .subtitles-content {
+  display: flex;
+  justify-content: space-between;
 }
 
 .subtitles-item .subtitles-drag {

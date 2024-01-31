@@ -7,20 +7,18 @@ class Subtitles extends Component {
         add: 0
     };
 
-    subtitles = [[0, "Пример текста cубтитров"]];
+    subtitles = [[0, 5, "Пример текста cубтитров"]];
     dragging_subtitles = false;
     current_subtitle = null;
     audioCtx = new AudioContext();
     audio_source = null;
     play_subtitle = false;
-    synth = window.speechSynthesis;
     
     addSubtitle = () => {
         if (this.audio_source != null && this.play_subtitle == true) {
             let subtitles = document.getElementsByClassName('subtitles-item');
 
-            this.audio_source.stop();  
-            this.synth.cancel();                  
+            this.audio_source.stop();               
 
             for (let item = 0; item < subtitles.length; item++) {
                 subtitles[item].childNodes[1].childNodes[0].setAttribute('data-action', 'play');
@@ -29,7 +27,7 @@ class Subtitles extends Component {
         }
 
         this.play_subtitle = false;
-        this.subtitles = [...this.subtitles, [this.subtitles[this.subtitles.length - 1][0] + 5, "Пример текста cубтитров"]];
+        this.subtitles = [...this.subtitles, [this.subtitles[this.subtitles.length - 1][0] + 5, this.subtitles[this.subtitles.length - 1][1] + 5, "Пример текста cубтитров"]];
         
         this.setState({add: 0});
     }
@@ -37,8 +35,7 @@ class Subtitles extends Component {
     remove = (e) => {
         if (this.audio_source != null && this.play_subtitle == true) {
             let subtitles = document.getElementsByClassName('subtitles-item');
-            this.audio_source.stop();   
-            this.synth.cancel();                 
+            this.audio_source.stop();                
 
             for (let item = 0; item < subtitles.length; item++) {
                 subtitles[item].childNodes[1].childNodes[0].setAttribute('data-action', 'play');
@@ -57,8 +54,7 @@ class Subtitles extends Component {
                 if (this.audio_source != null && this.play_subtitle == true) {
                     let subtitles = document.getElementsByClassName('subtitles-btn-play');
 
-                    this.audio_source.stop();   
-                    this.synth.cancel();                 
+                    this.audio_source.stop();                   
 
                     for (let item = 0; item < subtitles.length; item++) {
                         subtitles[item].setAttribute('data-action', 'play');
@@ -71,10 +67,7 @@ class Subtitles extends Component {
                 this.audio_source = this.audioCtx.createBufferSource()
                 this.audio_source.buffer = this.props.audio_buffer;
 
-                let gain_node = this.audioCtx.createGain();
-                gain_node.gain.value = 0.1;
-
-                this.audio_source.connect(gain_node).connect(this.audioCtx.destination);
+                this.audio_source.connect(this.audioCtx.destination);
                 
                 let duration = 0;
 
@@ -83,10 +76,6 @@ class Subtitles extends Component {
                 } else {
                     duration = this.audio_source.buffer.duration - this.subtitles[subtitle_id][0]
                 }
-
-                let speech = new SpeechSynthesisUtterance(this.subtitles[subtitle_id][1]);
-                speech.voice = this.synth.getVoices()[20];
-                this.synth.speak(speech);
                
                 this.audio_source.start(0, parseFloat(e.target.parentNode.parentNode.getAttribute('data-time')), duration);
 
@@ -100,7 +89,6 @@ class Subtitles extends Component {
                 e.target.innerHTML = "<img src='/img/icon-stop.png'/>";
             } else if (e.target.getAttribute('data-action') == 'stop') {
                 this.audio_source.stop();
-                this.synth.cancel();
                 this.play_subtitle = false;
                 e.target.setAttribute('data-action', 'play');
                 e.target.innerHTML = "<img src='/img/icon-play.png'/>";
@@ -172,8 +160,7 @@ class Subtitles extends Component {
                 if (this.audio_source != null && this.play_subtitle == true) {
                     let subtitles = document.getElementsByClassName('subtitles-btn-play');
 
-                    this.audio_source.stop();    
-                    this.synth.cancel();           
+                    this.audio_source.stop();
 
                     for (let item = 0; item < subtitles.length; item++) {
                         subtitles[item].setAttribute('data-action', 'play');
@@ -230,7 +217,7 @@ class Subtitles extends Component {
             {
                 let subtitles = document.getElementsByClassName('subtitles-item');
                 this.subtitles.map((element, index) => {
-                    subtitles[index].childNodes[2].innerText = element[1];
+                    subtitles[index].childNodes[2].innerText = element[2];
                 });
             }, 1000);
 
@@ -239,17 +226,21 @@ class Subtitles extends Component {
                     this.subtitles.map((element, index) => {
                         const sybtitles_style = {top: Math.round(canvas.clientHeight / audio_duration * element[0] - (28.8 * index))+'px'};
                         return <div className="subtitles-item" key={index} data-id={index} data-time={element[0]} style={sybtitles_style} onMouseDown={this.handleSubtitleMouseDown}>
-                            <div className="subtitles-drag"></div>
-                            <div className="subtitles-action">
-                                <button className="subtitles-btn-play" data-action="play" onClick={this.play}>
-                                    <img src='/img/icon-play.png'/>
-                                </button>
-                                <button className="subtitles-btn-remove" data-id={index} data-action="play" onClick={this.remove}>
-                                    <img src='/img/icon-delete.png'/>
-                                </button>
+                            <div className="subtitles-border-top"></div>
+                            <div className="subtitles-content">
+                                <div className="subtitles-drag"></div>
+                                <div className="subtitles-action">
+                                    <button className="subtitles-btn-play" data-action="play" onClick={this.play}>
+                                        <img src='/img/icon-play.png'/>
+                                    </button>
+                                    <button className="subtitles-btn-remove" data-id={index} data-action="play" onClick={this.remove}>
+                                        <img src='/img/icon-delete.png'/>
+                                    </button>
+                                </div>
+                                <span className="subtitles-text" contentEditable="true" onBlur={this.editText}>{element[2]}</span>
+                                <span className="subtitles-time">{element[0].toFixed(1)}s</span>  
                             </div>
-                            <span className="subtitles-text" contentEditable="true" onBlur={this.editText}>{element[1]}</span>
-                            <span className="subtitles-time">{element[0].toFixed(1)}s</span>  
+                            <div className="subtitles-border-bottom"></div>
                         </div>;
                     })
                 } 
